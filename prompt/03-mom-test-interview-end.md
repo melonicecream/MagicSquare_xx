@@ -53,7 +53,7 @@ Mom Test 인터뷰 종료.
 
 | 단계 | 프롬프트 / 산출 |
 |------|-----------------|
-| 보고서 저장 | `Report 폴더에 보고서를보내줘` → `Report/01-MomTest-Report.md` |
+| 보고서 저장 | `Report 폴더에 보고서를 내보내줘` → `Report/01-MomTest-Report.md` |
 | 세션 3 워크북 | [`05-session-3-workbook.md`](./05-session-3-workbook.md) |
 | 채점 (선택) | 아래 "채점 프롬프트" |
 
