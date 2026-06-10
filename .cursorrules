@@ -1,0 +1,41 @@
+# MagicSquare_xx — Cursor Rules (세션 3)
+
+## 프로젝트
+4×4 부분 마방진 **10선 판정** 학습 프로젝트. Solver·UI·자동 채우기는 범위 밖.
+
+## 도메인 (Rule)
+- 격자: 4×4 정수 리스트(또는 동등 구조). `0` = 빈 칸, 값은 1~16(중복 없음).
+- 마법상수: **34**. 각 선의 합이 34여야 pass 후보.
+- 10선 ID: **R1~R4**(행), **C1~C4**(열), **D1**(주대각), **D2**(반대각). 항상 10선 전부 검사.
+- `0`이 남아 있으면 `incomplete`. 채워진 선만 합 34가 아니면 `fail` + 해당 선 ID.
+
+## API (Command — ECB)
+- 진입점: `validate_lines(grid) -> dict`
+- 반환: `{ "status": "pass"|"fail"|"incomplete", "failed_lines": [...] }`
+- `failed_lines`: 깨진 선 ID 문자열 목록(예: `"R2"`, `"D1"`). pass·incomplete 시 `[]`.
+- ECB: **Entity**=격자·선·합 규칙, **Control**=`validate_lines`, **Boundary**=pytest·fixture·입력 격자. Control은 Boundary 형식만 받고 Entity 규칙만 적용.
+
+## 코드 구조
+```
+src/validate_lines.py   # Command (판정 로직)
+tests/test_validate_lines.py
+tests/fixtures/         # 격자 fixture (필요 시)
+```
+- 클래스·Solver·UI 추가 금지(요청 전). 함수 중심, 최소 diff.
+
+## TDD (Test Loop)
+- 순서: **RED → GREEN → REFACTOR**. 한 Phase에 한 목적만.
+- **RED**: `tests/`만 수정. 실패하는 테스트·fixture 추가. `src/` 수정 금지.
+- **GREEN**: `src/`만 수정해 RED 통과. 테스트 완화 금지.
+- **REFACTOR**: 동작 유지하며 정리. 테스트·구현 동시 변경은 필요 최소.
+- **금지**: assert 완화, `@pytest.mark.skip`, `xfail`, 기대값 변경으로 RED 회피.
+- 각 TDD 응답 **첫 줄**에 Phase 선언: `Phase: RED` | `Phase: GREEN` | `Phase: REFACTOR`.
+
+## AI 응답
+- **한국어**로 설명. 코드·식별자·선 ID는 영문 유지.
+- RED/GREEN/REFACTOR 외 Phase 혼합 금지.
+- 사용자가 요청하기 전 **git commit·push 금지**.
+- 요청 범위 밖 파일·기능 추가 금지.
+
+## 검증
+- `pytest`로 판정. RED에서는 실패, GREEN 후 전체 통과 확인.
